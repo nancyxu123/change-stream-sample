@@ -11,8 +11,10 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <beam.version>2.32.0</beam.version>
-    <connector.version>2.33.0.1-SNAPSHOT</connector.version>
+    <beam.version>2.35.0</beam.version>
+    <connector.version>2.38.0-SNAPSHOT</connector.version>
+    <hadoop.common.version>3.3.1</hadoop.common.version>
+    <hadoop.core.version>1.2.1</hadoop.core.version>
     <slf4j.version>1.7.25</slf4j.version>
   </properties>
 
@@ -24,8 +26,33 @@
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
+      <artifactId>beam-sdks-java-extensions-sorter</artifactId>
+      <version>${beam.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.beam</groupId>
       <artifactId>beam-sdks-java-core</artifactId>
       <version>${beam.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+      <version>${hadoop.common.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-core</artifactId>
+      <version>${hadoop.core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>3.19.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.beam</groupId>
+      <artifactId>beam-runners-core-java</artifactId>
+      <version>2.35.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.beam</groupId>
@@ -39,5 +66,20 @@
       <scope>runtime</scope>
     </dependency>
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>missing-artifact-repos</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>apache.snapshots</id>
+          <url>https://repository.apache.org/content/repositories/snapshots</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
 </project>
 

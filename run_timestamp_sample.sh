@@ -22,7 +22,6 @@ EOF
 if ! command -v mvn &>/dev/null; then
 	cat <<EOF
 Please install Maven!
-
 Linux:  sudo apt install -y maven
 Mac:  brew install maven
 EOF
@@ -101,7 +100,7 @@ test ! "${REGION}" && echo "Missing region" && print_usage
 mvn \
   clean \
   compile \
-  exec:java -Dexec.mainClass=com.google.changestreams.sample.bigquery.Main \
+  exec:java -Dexec.mainClass=com.google.changestreams.sample.timestampOrdering.DataflowOrderedGloballyByKeyCodeSample \
   -Dexec.args=" \
     --project=${PROJECT} \
     --instance=${INSTANCE} \
@@ -109,13 +108,17 @@ mvn \
     --metadataInstance=${METADATA_INSTANCE} \
     --metadataDatabase=${METADATA_DATABASE} \
     --changeStreamName=${CHANGE_STREAM_NAME} \
-    --gcsBucket=${GCS_BUCKET} \
     --gcpTempLocation=gs://${GCS_BUCKET}/temp \
     --region=${REGION} \
     --bigQueryDataset=${BIG_QUERY_DATASET} \
     --bigQueryTableName=${BIG_QUERY_TABLE_NAME} \
     --runner=DataflowRunner \
-    --numWorkers=1 \
-    --maxNumWorkers=1 \
+    --numWorkers=600 \
+    --maxNumWorkers=1000
+    --defaultWorkerLogLevel=DEBUG \
+    --experiments=enable_streaming_auto_sharding
     --experiments=use_runner_v2 \
+    --streaming \
+    --enableStreamingEngine \
   "
+
