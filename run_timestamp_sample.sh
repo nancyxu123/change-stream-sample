@@ -113,12 +113,13 @@ mvn \
     --bigQueryDataset=${BIG_QUERY_DATASET} \
     --bigQueryTableName=${BIG_QUERY_TABLE_NAME} \
     --runner=DataflowRunner \
-    --numWorkers=600 \
-    --maxNumWorkers=1000
+    --numWorkers=200 \
     --defaultWorkerLogLevel=DEBUG \
     --experiments=enable_streaming_auto_sharding
     --experiments=use_runner_v2 \
     --streaming \
     --enableStreamingEngine \
+    --autoscalingAlgorithm=NONE \
+    --workerMachineType=e2-standard-4 \
   "
 
