@@ -108,17 +108,23 @@ mvn \
     --metadataInstance=${METADATA_INSTANCE} \
     --metadataDatabase=${METADATA_DATABASE} \
     --changeStreamName=${CHANGE_STREAM_NAME} \
+    --gcsBucket=${GCS_BUCKET} \
     --gcpTempLocation=gs://${GCS_BUCKET}/temp \
     --region=${REGION} \
     --bigQueryDataset=${BIG_QUERY_DATASET} \
     --bigQueryTableName=${BIG_QUERY_TABLE_NAME} \
     --runner=DataflowRunner \
-    --numWorkers=600 \
-    --maxNumWorkers=1000
+    --numWorkers=200 \
     --defaultWorkerLogLevel=DEBUG \
     --experiments=enable_streaming_auto_sharding
     --experiments=use_runner_v2 \
     --streaming \
     --enableStreamingEngine \
+    --autoscalingAlgorithm=NONE \
+    --workerMachineType=e2-standard-8 \
   "
+
+  # This pipeline needs to use relatively high-memory Dataflow VMs, at the very least 16 GB. To see all Dataflow worker VMs, go to
+  # https://cloud.google.com/compute/docs/general-purpose-machines.
+  # Adjust the number of workers up and down depending on if CPU utilization exceeds 20%.
 

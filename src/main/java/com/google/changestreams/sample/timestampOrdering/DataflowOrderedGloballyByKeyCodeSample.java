@@ -112,11 +112,6 @@ public class DataflowOrderedGloballyByKeyCodeSample {
 
     final com.google.cloud.Timestamp inclusiveStartAt = com.google.cloud.Timestamp.now();
 
-    // For now, we have to set an end timestamp to this pipeline. End timestamp cannot be null.
-    final com.google.cloud.Timestamp inclusiveEndAt = com.google.cloud.Timestamp.ofTimeSecondsAndNanos(
-        inclusiveStartAt.getSeconds() + (10 * 60),
-        inclusiveStartAt.getNanos()
-    );
     final long timeIncrementInSeconds = 5;
 
     pipeline
@@ -134,14 +129,13 @@ public class DataflowOrderedGloballyByKeyCodeSample {
             .withMetadataDatabase(metadataDatabaseId)
             .withChangeStreamName(changeStreamName)
             .withInclusiveStartAt(inclusiveStartAt)
-            .withInclusiveEndAt(inclusiveEndAt)
+            // .withInclusiveEndAt(inclusiveEndAt)
         )
         .apply(ParDo.of(new BreakRecordByModFn()))
         .apply(ParDo.of(new KeyByIdFn()))
         .apply(
             ParDo.of(new BufferKeyUntilOutputTimestamp(timeIncrementInSeconds)))
         .apply(ParDo.of(new CreateRecordWithMetadata()))
-
         // Writes each window of records into BigQuery
         .apply("Write to BigQuery table",
             BigQueryIO
@@ -240,7 +234,11 @@ public class DataflowOrderedGloballyByKeyCodeSample {
       String[] arrayOfKeys = keySubstring.split(",", -1);
       String keyPrefix = arrayOfKeys[arrayOfKeys.length - 1];
 
-      outputReceiver.output(KV.of(keyPrefix, record));
+      int hashCode = (int) keyPrefix.hashCode();
+      long numberOfBuckets = 1000;
+      String bucketIndex = String.valueOf(hashCode % numberOfBuckets);
+
+      outputReceiver.output(KV.of(bucketIndex, record));
     }
   }
 
