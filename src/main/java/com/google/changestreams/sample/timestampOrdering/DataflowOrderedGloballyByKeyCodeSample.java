@@ -120,7 +120,7 @@ public class DataflowOrderedGloballyByKeyCodeSample {
             .readChangeStream()
             .withSpannerConfig(SpannerConfig
                 .create()
-                .withHost(StaticValueProvider.of("https://staging-wrenchworks.sandbox.googleapis.com"))
+                .withHost(StaticValueProvider.of("https://batch-spanner.googleapis.com"))
                 .withProjectId(projectId)
                 .withInstanceId(instanceId)
                 .withDatabaseId(databaseId)
