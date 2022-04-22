@@ -117,6 +117,6 @@ This script will dispatch a remote job in dataflow with the specified configurat
 - `-bt|--big-query-table-name`: the BigQuery table name in the big query dataset to store the records emitted by the change stream
 - `-r|--region`: the region where to execute the Dataflow job (for options see [Dataflow Locations](https://cloud.google.com/dataflow/docs/resources/locations))
 
-The job executed here will spawn a single Dataflow worker to consume the change stream.
+The job executed here will spawn 200 dataflow workers with high memory VMs to consume the change stream. See run_timestamp_sample.sh to see the Dataflow workers used.
 
 For experimentation purposes, you can also tweak the numWorkers specified in run_timestamp_sample.sh to lower or increase the number of Dataflow workers used.
